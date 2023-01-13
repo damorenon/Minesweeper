@@ -1,75 +1,77 @@
-import { emptyFieldGenerator, fieldGenerator, CellState } from "./Field";
+import { emptyFieldGenerator, fieldGenerator, CellState, Cell } from './Field';
 
-const { empty, hidden, bomb } = CellState;
+const { empty, bomb, hidden } = CellState;
+
+const cellWithBombFilter = (cell: Cell) => cell === bomb;
 
 describe('Field Generator', () => {
-  describe('emptyFieldGenerator tets', () => {
-
+  describe('emptyFieldGenerator tests', () => {
     it('2x2', () => {
-      const received = emptyFieldGenerator(2);
-      const expected = [
+      expect(emptyFieldGenerator(2)).toStrictEqual([
         [empty, empty],
-        [empty, empty]
-      ];
-      expect(received).toStrictEqual(expected);
+        [empty, empty],
+      ]);
     });
-
-    it('3x3', () => {
-      const received = emptyFieldGenerator(3);
-      const expected = [
+    it('3x3', () =>
+      expect(emptyFieldGenerator(3)).toStrictEqual([
         [empty, empty, empty],
         [empty, empty, empty],
-        [empty, empty, empty]
-      ];
-      expect(received).toStrictEqual(expected);
-    });
-
-    it('3x3, hidden', () => {
-      const received = emptyFieldGenerator(3, hidden);
-      const expected = [
+        [empty, empty, empty],
+      ]));
+    it('3x3 with hidden state', () =>
+      expect(emptyFieldGenerator(3, hidden)).toStrictEqual([
         [hidden, hidden, hidden],
         [hidden, hidden, hidden],
-        [hidden, hidden, hidden]
-      ];
-      expect(received).toStrictEqual(expected);
-    });
-
-  })
-
+        [hidden, hidden, hidden],
+      ]));
+  });
   describe('Simple cases', () => {
-    it('Wrong Dencity', () => {
-      const errorText = 'Dencity must be between 0 and 1';
+    it('Wrong dencity', () => {
+      const errorText = 'Probability must be between 0 and 1';
       expect(() => fieldGenerator(1, -1)).toThrow(errorText);
       expect(() => fieldGenerator(1, 2)).toThrow(errorText);
     });
-
-    it('Smallest field without mine', () => {
-      const received = fieldGenerator(1, 0);
-      const expected = [[empty]];
-      expect(received).toStrictEqual(expected);
+    it('Smallest possible field without mine', () => {
+      expect(fieldGenerator(1, 0)).toStrictEqual([[empty]]);
     });
-
     it('Big field without mine', () => {
-      const received = fieldGenerator(10, 0);
-      const expected = [
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,],
-      ];
-      expect(received).toStrictEqual(expected);
+      expect(fieldGenerator(10, 0)).toStrictEqual([
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+      ]);
     });
-
-    /* it('Smallest field with mine', () => {
-      const received = fieldGenerator(1, 1);
-      const expected = [[bomb]];
-      expect(received).toStrictEqual(expected);
-    }); */
-  })
-})
+    it('Smallest possible field with mine', () => {
+      expect(fieldGenerator(1, 1)).toStrictEqual([[bomb]]);
+    });
+    it('2x2 field with mines', () => {
+      expect(fieldGenerator(2, 1)).toStrictEqual([
+        [bomb, bomb],
+        [bomb, bomb],
+      ]);
+    });
+    it('2x2 field with 50% probability', () => {
+      const field = fieldGenerator(2, 0.5);
+      const flatField = field.flat();
+      const cellsWithBombs = flatField.filter(cellWithBombFilter);
+      const emptyCells = flatField.filter((cell: Cell) => cell === 2);
+      expect(cellsWithBombs).toHaveLength(2);
+      expect(emptyCells).toHaveLength(2);
+    });
+    it('Real game field size = 10x10 with 1/4 mined cells (25 mines)', () => {
+      const size = 10;
+      const mines = 25;
+      const probability = mines / (size * size);
+      const field = fieldGenerator(size, probability);
+      const flatField = field.flat();
+      expect(flatField.filter(cellWithBombFilter)).toHaveLength(25);
+    });
+  });
+});
