@@ -13,7 +13,7 @@ const Template: Story<TopComponentType> = (args) => <Top {...args} />;
 export const TopPanel = Template.bind({});
 TopPanel.args = {
   children: 'MineSweeper',
-  feature: 'flag',
-  firstAction: 'ctrl',
-  secondAction: 'click'
+  feature: 'Flag',
+  firstAction: 'Ctrl',
+  secondAction: 'Click'
 }
