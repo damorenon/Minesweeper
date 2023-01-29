@@ -5,7 +5,7 @@ import {
   checkItemInField,
 } from './CellsManipulator';
 
-const { empty, bomb } = CellState;
+const { empty: e, bomb: b } = CellState;
 
 describe('Check neigbours selectors', () => {
   it('With [0, 0] coords', () => {
@@ -36,7 +36,7 @@ describe('Check neigbours selectors', () => {
 
 describe('checkItemInField tests', () => {
   describe('Simple cases', () => {
-    const field: Field = [[empty]];
+    const field: Field = [[e]];
 
     it('Out of y range', () => {
       expect(checkItemInField([1, 0], field)).toBe(false);
@@ -52,11 +52,11 @@ describe('checkItemInField tests', () => {
   });
   describe('Big field', () => {
     const field: Field = [
-      [empty, empty, empty, empty, empty],
-      [empty, empty, empty, empty, empty],
-      [empty, empty, empty, empty, empty],
-      [empty, empty, empty, empty, empty],
-      [empty, empty, empty, empty, empty],
+      [e, e, e, e, e],
+      [e, e, e, e, e],
+      [e, e, e, e, e],
+      [e, e, e, e, e],
+      [e, e, e, e, e],
     ];
 
     it('Out of x range', () => {
@@ -80,19 +80,19 @@ describe('checkItemInField tests', () => {
 describe('Check Increment Neibours', () => {
   describe('Simple cases', () => {
     it('Field with only one item', () => {
-      expect(incrementNeibours([0, 0], [[bomb]])).toStrictEqual([[bomb]]);
+      expect(incrementNeibours([0, 0], [[b]])).toStrictEqual([[b]]);
     });
     it('Field 2x2 with one mine', () => {
       expect(
         incrementNeibours(
           [0, 0],
           [
-            [bomb, empty],
-            [empty, empty],
+            [b, e],
+            [e, e],
           ]
         )
       ).toStrictEqual([
-        [bomb, 1],
+        [b, 1],
         [1, 1],
       ]);
     });
@@ -101,13 +101,13 @@ describe('Check Increment Neibours', () => {
         incrementNeibours(
           [0, 0],
           [
-            [bomb, empty],
-            [empty, bomb],
+            [b, e],
+            [e, b],
           ]
         )
       ).toStrictEqual([
-        [bomb, 1],
-        [1, bomb],
+        [b, 1],
+        [1, b],
       ]);
     });
   });
@@ -117,14 +117,14 @@ describe('Check Increment Neibours', () => {
         incrementNeibours(
           [1, 1],
           [
-            [empty, empty, empty],
-            [empty, bomb, empty],
-            [empty, empty, empty],
+            [e, e, e],
+            [e, b, e],
+            [e, e, e],
           ]
         )
       ).toStrictEqual([
         [1, 1, 1],
-        [1, bomb, 1],
+        [1, b, 1],
         [1, 1, 1],
       ]);
     });
@@ -133,15 +133,31 @@ describe('Check Increment Neibours', () => {
         incrementNeibours(
           [1, 1],
           [
-            [0, 1, bomb],
-            [0, bomb, 1],
+            [0, 1, b],
+            [0, b, 1],
             [0, 0, 0],
           ]
         )
       ).toStrictEqual([
-        [1, 2, bomb],
-        [1, bomb, 2],
+        [1, 2, b],
+        [1, b, 2],
         [1, 1, 1],
+      ]);
+    });
+    it('Field 3x3 as syntetic case with neighbors cells is reached max possible bombs', () => {
+      expect(
+        incrementNeibours(
+          [1, 1],
+          [
+            [0, 1, b],
+            [8, b, 1],
+            [8, 8, 8],
+          ]
+        )
+      ).toStrictEqual([
+        [1, 2, b],
+        [8, b, 2],
+        [8, 8, 8],
       ]);
     });
   });
