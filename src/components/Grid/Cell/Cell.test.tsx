@@ -15,6 +15,15 @@ describe('Cell component check', () => {
   };
 
   for (let cell = CellState.empty; cell <= CellState.weakFlag; cell++) {
+    it('Cell renders correct', () => {
+      const { asFragment } = render(<Cell {...props}>{cell}</Cell>);
+      expect(asFragment()).toMatchSnapshot();
+    });
+
+    it('Closed Frame renders correct', () => {
+      const { asFragment } = render(<ClosedFrame mouseDown={true} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
 
     it('Check prevent default contextMenu for every type of cell', () => {
       render(<Cell {...props}>{cell}</Cell>);
