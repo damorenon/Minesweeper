@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import styled from "@emotion/styled";
 
-import { Legend, LegendProps } from "./Legend/Legend";
-import { GameName, GameNameProps } from "./GameName/GameName";
+import { Legend, LegendProps } from "./Legend";
+import { GameName, GameNameProps } from "./GameName";
 
 const Header = styled.header`
   text-align: center;

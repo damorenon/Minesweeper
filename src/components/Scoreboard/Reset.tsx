@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
+
 import { useMouseDown } from '@/hooks/useMouseDown';
 
 export interface ResetProps {
@@ -9,7 +10,7 @@ export interface ResetProps {
   onReset: () => void;
 }
 
-export const Reset: FC<ResetProps> = ({ onReset }) => {
+export const Reset: FC<ResetProps> = memo(({ onReset }) => {
   const [mouseDown, onMouseDown, onMouseUp] = useMouseDown();
 
   return (
@@ -22,10 +23,14 @@ export const Reset: FC<ResetProps> = ({ onReset }) => {
       {mouseDown ? '😯' : '🙂'}
     </Button>
   );
-};
+});
+
+// Stryker disable next-line StringLiteral
+Reset.displayName = 'Reset';
 
 const Button = styled.button`
-  font-size: 1.5vw;
+  font-size: 1.1vw;
+  height: 100%;
   cursor: pointer;
   font-weight: 700;
   border-width: 0.15vw;

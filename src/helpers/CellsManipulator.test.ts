@@ -1,4 +1,4 @@
-import { CellState, Field } from '../field/Field';
+import { CellState, Field } from './Field';
 import {
   incrementNeibours,
   getNeigboursItems,

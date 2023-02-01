@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import styled from '@emotion/styled';
 
 export interface CounterProps {
@@ -8,9 +8,12 @@ export interface CounterProps {
   children: string;
 }
 
-export const Counter: FC<CounterProps> = ({ children }) => (
+export const Counter: FC<CounterProps> = memo(({ children }) => (
   <Frame>{children}</Frame>
-);
+));
+
+// Stryker disable next-line StringLiteral
+Counter.displayName = 'Counter';
 
 const Frame = styled.div`
   display: inline-block;
